@@ -191,3 +191,25 @@ class TestProductModel(unittest.TestCase):
         for product in found:
             self.assertEqual(product.category, category)   
 
+from unittest import mock
+
+class TestProductModel(unittest.TestCase):
+    """Test Cases for Product Model"""
+
+    # ... existing code ...
+
+    @mock.patch('service.models.logger')
+    def test_find_by_price_with_logging(self, mock_logger):
+        """It should log an info message when finding by price"""
+        # Assuming you have a method to add products
+        product = Product(name="Fedora", description="A red hat", price=12.50, available=True, category=Category.CLOTHS)
+        product.create()
+
+        # Call the method
+        result = Product.find_by_price(12.50)
+
+        # Check the logging call
+        mock_logger.info.assert_called_once_with("Processing price query for %s ...", Decimal(12.50))
+
+        # Continue with your assertions
+        self.assertIsNotNone(result)
